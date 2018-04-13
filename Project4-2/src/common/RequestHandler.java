@@ -4,8 +4,6 @@
 package common;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +19,11 @@ public class RequestHandler extends HttpServlet{
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 		 response.setContentType("text/html");
-		 PrintWriter out = response.getWriter();
 		 
-		 out.print("executed");
+		 String input = request.getParameter("input");
+		 
+		 request.setAttribute("output", input);
+		 request.getRequestDispatcher("/index.jsp").forward(request, response);
 	 }
 
 }

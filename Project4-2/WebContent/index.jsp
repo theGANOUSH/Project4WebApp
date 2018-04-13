@@ -15,17 +15,17 @@
 		All execution results will appear below.
 		</p>
 		<form action="RequestHandler" method="post">
-			<textarea rows="8" cols="50"></textarea><br>
+			<textarea name="input" rows="8" cols="50"></textarea><br>
 			<div id="buttons">
-				<input type="submit" value="Execute Command"/>
-				<input type="reset" value="Clear Form"/>
+				<input name="execute" type="submit" value="Execute Command"/>
+				<input name="reset" type="reset" value="Clear Form"/>
 			</div>
 		</form>
 	</body>
 	<footer>
 		<h3>Database Results:</h3>
 		<div id=results>
-		
+		<p>${output}</p>
 		</div>
 	</footer>
 </html>
