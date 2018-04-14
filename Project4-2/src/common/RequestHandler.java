@@ -10,11 +10,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 /**
@@ -52,11 +57,42 @@ public class RequestHandler extends HttpServlet{
 		return resultSet;
 	}
 
+	public TableModel resultSetToTableModel(ResultSet rs) {
+        try {
+            java.sql.ResultSetMetaData metaData = rs.getMetaData();
+            int numberOfColumns = metaData.getColumnCount();
+            Vector<String> columnNames = new Vector<String>();
+
+            // Get the column names
+            for (int column = 0; column < numberOfColumns; column++) {
+                columnNames.addElement(metaData.getColumnLabel(column + 1));
+            }
+
+            // Get all rows.
+            Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+
+            while (rs.next()) {
+                Vector<Object> newRow = new Vector<Object>();
+
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    newRow.addElement(rs.getObject(i));
+                }
+
+                rows.addElement(newRow);
+            }
+
+            return new DefaultTableModel(rows, columnNames);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
 	public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 		 response.setContentType("text/html");
 		 String input = request.getParameter("input");
-		 
-		 request.setAttribute("output",databaseQuery(input, request, response));
+		 JTable tableResults = new JTable(resultSetToTableModel(databaseQuery(input, request, response)));
+		 request.setAttribute("output",tableResults);
 		 request.getRequestDispatcher("/index.jsp").forward(request, response);
 	 }
 
