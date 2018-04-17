@@ -32,6 +32,11 @@ textarea {
 	max-width: 80%;
 	min-width: 40%;
 	}
+table, th, td {
+
+   border: 1px solid black;
+
+}
 footer {
 	border-top: 1px solid BLACK;
 	}
@@ -39,7 +44,7 @@ footer {
 	text-align: center;
 	padding-bottom: 10px;
 	}
-#results {
+//#results {
 	text-align: center;
 	color: #76323F;
 	line-height: 200%;

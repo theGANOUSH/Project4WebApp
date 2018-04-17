@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -31,7 +30,7 @@ public class RequestHandler extends HttpServlet{
 	private static final long serialVersionUID = 3004342931828496260L;
 	private Connection connection;
 	
-	public ResultSet databaseQuery(String query, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public TableModel databaseQuery(String query, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		ResultSet resultSet = null;
 		
 		MysqlDataSource dataSource = new MysqlDataSource();
@@ -54,9 +53,9 @@ public class RequestHandler extends HttpServlet{
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
 		
-		return resultSet;
+		return resultSetToTableModel(resultSet);
 	}
-
+	
 	public TableModel resultSetToTableModel(ResultSet rs) {
         try {
             java.sql.ResultSetMetaData metaData = rs.getMetaData();
@@ -88,12 +87,30 @@ public class RequestHandler extends HttpServlet{
             return null;
         }
     }
+
 	public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-		 response.setContentType("text/html");
-		 String input = request.getParameter("input");
-		 JTable tableResults = new JTable(resultSetToTableModel(databaseQuery(input, request, response)));
-		 request.setAttribute("output",tableResults);
-		 request.getRequestDispatcher("/index.jsp").forward(request, response);
+		StringBuilder outputData = new StringBuilder("<table><tr>");
+
+		TableModel queryTable;
+		response.setContentType("text/html");
+		String input = request.getParameter("input");
+
+		try {
+			queryTable = databaseQuery(input, request, response);
+			
+			for(int cols =0; cols < queryTable.getColumnCount(); cols++)
+			{
+				outputData.append("<th>" + queryTable.getColumnName(cols) + "</th>");			}
+			
+			outputData.append("</tr></table>");
+			//queryData.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Error: " + e.getMessage());
+		}
+		
+		request.setAttribute("output", outputData);
+		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	 }
 
 }

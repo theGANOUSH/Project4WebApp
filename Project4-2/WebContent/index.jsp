@@ -25,7 +25,7 @@
 	<footer>
 		<h3>Database Results:</h3>
 		<div id=results>
-		<p>${output}</p>
+			${output}
 		</div>
 	</footer>
 </html>
