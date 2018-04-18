@@ -33,8 +33,9 @@ textarea {
 	min-width: 40%;
 	}
 table, th, td {
-
    border: 1px solid black;
+   margin-left: auto;
+   margin-right: auto;
 
 }
 footer {
@@ -44,16 +45,9 @@ footer {
 	text-align: center;
 	padding-bottom: 10px;
 	}
-//#results {
-	text-align: center;
-	color: #76323F;
-	line-height: 200%;
-	border: 3px solid BLACK;
-	border-radius: 5px;
-	margin-left: 100px;
-	margin-right: 100px;
-	max-width: 800px;
-	min-width: 400px;
+#results {
+
+
 	}
 
 

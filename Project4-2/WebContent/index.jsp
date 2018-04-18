@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%-- 
+Name: Austin Lowe
+Course: CNT 4714  Spring 2018 Project Four
+Assignment title: A Three-Tier Distributed Web-Based Application
+Date: April 1, 2018
+
+--%>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
