@@ -112,18 +112,55 @@ public class RequestHandler extends HttpServlet{
 		return output;
 	}
 
+	private String executeStatement(String input, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException 
+	{ 
+		String output = null;
+		
+		MysqlDataSource dataSource = new MysqlDataSource();
+		dataSource.setUser("client");
+		dataSource.setPassword("Password1");
+		dataSource.setURL("jdbc:mysql://localhost:3306/project4");
+		try {
+			connection = dataSource.getConnection();
+
+			}catch (Exception e){
+				request.setAttribute("output",e.getMessage());
+				request.getRequestDispatcher("/index.jsp").forward(request, response);System.err.println(e.getMessage());
+			}
+		try {
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(input);
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+				request.setAttribute("output",e.getMessage());
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
+			}
+		output = "The statement Executed successfully.";
+		
+	
+		return output.toString();
+	}
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-		StringBuilder outputData = null;
+		StringBuilder outputData = new StringBuilder();
 		TableModel queryTable;
 		
 		response.setContentType("text/html");
 		String input = request.getParameter("input");
 
 		try {
-			queryTable = databaseQuery(input, request, response);
-			
-			outputData = getOutput(queryTable);
-			//print table headers
+			if(input.contains("select") || input.contains("SELECT"))
+			{
+				queryTable = databaseQuery(input, request, response);
+				
+				outputData = getOutput(queryTable);
+			}
+			else 
+			{
+				outputData.append(executeStatement(input, request,response));
+				outputData.append("<br>Business Logic Detected! - Updating Supplier Status");
+				outputData.append("<br>Business Logic updated");
+			}
 				
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -5,7 +5,6 @@ Name: Austin Lowe
 Course: CNT 4714  Spring 2018 Project Four
 Assignment title: A Three-Tier Distributed Web-Based Application
 Date: April 1, 2018
-
 --%>
 <!DOCTYPE html>
 <html lang="en">

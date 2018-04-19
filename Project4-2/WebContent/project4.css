@@ -34,6 +34,7 @@ textarea {
 	}
 table, th, td {
    border: 1px solid black;
+   border-collapse: collapse;
    margin-left: auto;
    margin-right: auto;
 
@@ -46,6 +47,7 @@ footer {
 	padding-bottom: 10px;
 	}
 #results {
+	text-align: center;
 
 
 	}
