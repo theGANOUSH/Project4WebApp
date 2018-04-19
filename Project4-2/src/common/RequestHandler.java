@@ -114,7 +114,8 @@ public class RequestHandler extends HttpServlet{
 
 	private String executeStatement(String input, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException 
 	{ 
-		String output = null;
+		StringBuilder output = new StringBuilder();
+		int rowsUpdated = 0;
 		
 		MysqlDataSource dataSource = new MysqlDataSource();
 		dataSource.setUser("client");
@@ -129,13 +130,15 @@ public class RequestHandler extends HttpServlet{
 			}
 		try {
 			Statement statement = connection.createStatement();
-			statement.executeUpdate(input);
+			rowsUpdated = statement.executeUpdate(input);
 			} catch (SQLException e) {
 			// TODO Auto-generated catch block
 				request.setAttribute("output",e.getMessage());
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
-		output = "The statement Executed successfully.";
+		output.append("The statement Executed successfully.<br>" + rowsUpdated + " Row(s) Affected.");
+		output.append("<br>Business Logic Detected! - Updating Supplier Status");
+		
 		
 	
 		return output.toString();
@@ -158,7 +161,6 @@ public class RequestHandler extends HttpServlet{
 			else 
 			{
 				outputData.append(executeStatement(input, request,response));
-				outputData.append("<br>Business Logic Detected! - Updating Supplier Status");
 				outputData.append("<br>Business Logic updated");
 			}
 				
