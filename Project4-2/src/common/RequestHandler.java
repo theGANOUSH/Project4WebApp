@@ -53,10 +53,10 @@ public class RequestHandler extends HttpServlet{
 				request.getRequestDispatcher("/index.jsp").forward(request, response);
 			}
 		
-		return resultSetToTableModel(resultSet);
+		return resultSetToTableModel(resultSet, request, response);
 	}
 	
-	private TableModel resultSetToTableModel(ResultSet rs) {
+	private TableModel resultSetToTableModel(ResultSet rs, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             java.sql.ResultSetMetaData metaData = rs.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
@@ -81,8 +81,10 @@ public class RequestHandler extends HttpServlet{
             }
 
             return new DefaultTableModel(rows, columnNames);
+            
         } catch (Exception e) {
-            e.printStackTrace();
+        	request.setAttribute("output", e.getMessage());
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 
             return null;
         }
@@ -150,28 +152,36 @@ public class RequestHandler extends HttpServlet{
 		
 		response.setContentType("text/html");
 		String input = request.getParameter("input");
-
-		try {
-			if(input.contains("select") || input.contains("SELECT"))
-			{
-				queryTable = databaseQuery(input, request, response);
-				
-				outputData = getOutput(queryTable);
-			}
-			else 
-			{
-				outputData.append(executeStatement(input, request,response));
-				outputData.append("<br>Business Logic updated");
-			}
-				
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			request.setAttribute("output", e.getMessage());
+		
+		if(null != request.getParameter("reset"))
+		{
+			outputData.setLength(0);
+			request.setAttribute("output", outputData);
 			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}
+		if(null != request.getParameter("execute")) {
+			try {
+				if(input.contains("select") || input.contains("SELECT"))
+				{
+					queryTable = databaseQuery(input, request, response);
+					
+					outputData = getOutput(queryTable);
+				}
+				else 
+				{
+					outputData.append(executeStatement(input, request,response));
+	
+					outputData.append("<br>Business Logic updated");
+				}
+					
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				request.setAttribute("output", e.getMessage());
+				request.getRequestDispatcher("/index.jsp").forward(request, response);
+			}
+			request.setAttribute("output", outputData);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		 }
 		
-		request.setAttribute("output", outputData);
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
-	 }
-
+	}
 }

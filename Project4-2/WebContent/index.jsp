@@ -24,7 +24,7 @@ Date: April 1, 2018
 			<textarea name="input" rows="8" cols="50"></textarea><br>
 			<div id="buttons">
 				<input name="execute" type="submit" value="Execute Command"/>
-				<input name="reset" type="reset" value="Clear Form"/>
+				<input name="reset" type="submit" value="Clear Form"/>
 			</div>
 		</form>
 	</body>
